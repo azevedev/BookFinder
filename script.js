@@ -45,7 +45,7 @@ function lockToDiv(item){
     <p>Authors: `+authors+`</p><br>
     <p>publisher: `+publisher+` <small>(`+date+`)</small></p><br>
     <p>Categories: `+categories+`</p><br>
-    <p><a target="_blank" href="`+link+`">Read more</a></p>`;
+    <p><a target="_blank" href="`+link+`">Read more >></a></p>`;
     divBook.classList.add("book");
     divImg.classList.add("img");
     divText.classList.add("text");
