@@ -1,75 +1,420 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+@font-face {
+    font-family: "Literata";
+    src: url("assets/literata-var.woff2") format("woff2");
+    font-weight: 200 900;
+    font-style: normal;
+    font-display: swap;
 }
 
-body{
+/*
+   Paper and ink, with one accent used everywhere: a printer's vermilion.
+   Light and dark are the same layout with swapped tokens, chosen by the
+   system. Every corner on the page is square, because every cover is.
+*/
+
+:root {
+    --paper: #f1f0ec;
+    --paper-sunk: #e7e5df;
+    --ink: #17171b;
+    --muted: #605f66;
+    --hairline: #d3d1c9;
+    --accent: #b5301a;
+    --accent-ink: #ffffff;
+    --shadow: 0 10px 26px rgba(23, 23, 27, .16);
+    --gutter: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #16161a;
+        --paper-sunk: #202027;
+        --ink: #eceae4;
+        --muted: #9d9ba4;
+        --hairline: #2f2f38;
+        --accent: #ff6f52;
+        --accent-ink: #1a0a05;
+        --shadow: 0 10px 26px rgba(0, 0, 0, .5);
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    color-scheme: light dark;
+}
+
+body {
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #515151;
-    color: white;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-.search{
-    font-size: 1.3em;
-    padding: 12px;
-    width: 100%;
-    align-items: center;
-    text-align: center;
-}
-.search input{
-    width: 50%;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    outline: none;
+a {
+    color: var(--ink);
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
 }
 
-button{
-    width: 30%;
-    padding: 12px;
-    margin: 0;
+a:hover {
+    color: var(--accent);
+}
+
+img {
+    max-width: 100%;
     display: block;
-    border: none;
-    background: green;
-    outline: none;
 }
 
-button:hover{
-    background: darkgreen;
-}
+/* ---------- top bar ---------- */
 
-button:focus{
-    background: rgb(4, 65, 4);
-}
-
-.container{
-    width: 80%;
-    background: #515151;
-    box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.5),
-                 1px 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-.book{
-    margin: 14px;
-    padding: 14px;
+.topbar {
     display: flex;
-    position: relative;
-    background: #414141;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 68px;
+    padding: 0 var(--gutter);
+    border-bottom: 1px solid var(--hairline);
 }
 
-
-
-.text{
-    padding: 12px;
+.topbar__mark {
+    font-weight: 700;
+    letter-spacing: -.015em;
 }
 
-a{
-    text-decoration: none;
-    color: white;
-    font-weight: 800;
+.topbar__source {
+    font-size: .8125rem;
+    color: var(--muted);
+}
+
+/* ---------- search ---------- */
+
+.page {
+    flex: 1;
+    padding: 0 var(--gutter);
+}
+
+.finder {
+    padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(2rem, 4vw, 3rem);
+    max-width: 46rem;
+}
+
+.finder__title {
+    font-size: clamp(2.75rem, 7.5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.02;
+    letter-spacing: -.035em;
+    margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.finder__label {
+    display: block;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .625rem;
+}
+
+.finder__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .625rem;
+}
+
+.finder__input {
+    flex: 1 1 16rem;
+    font: inherit;
+    font-size: 1.0625rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 0;
+    padding: .9375rem 1.125rem;
+    min-width: 0;
+    transition: border-color .18s ease;
+}
+
+.finder__input::placeholder {
+    color: var(--muted);
+}
+
+.finder__input:hover {
+    border-color: var(--muted);
+}
+
+.finder__input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.finder__input::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+
+.finder__help {
+    margin-top: .75rem;
+    font-size: .875rem;
+    color: var(--muted);
+}
+
+.finder__help[data-tone="error"] {
+    color: var(--accent);
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+    font: inherit;
+    font-size: .9375rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 0;
+    padding: .9375rem 1.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .18s ease, background-color .18s ease, transform .08s ease;
+}
+
+.btn:hover {
+    border-color: var(--ink);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.btn--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+}
+
+.btn--primary:hover {
+    filter: brightness(1.1);
+    border-color: var(--accent);
+}
+
+.btn[disabled] {
+    opacity: .5;
+    cursor: progress;
+}
+
+/* ---------- results ---------- */
+
+.results {
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.results__count {
+    font-size: .875rem;
+    color: var(--muted);
+    min-height: 1.6em;
+    margin-bottom: 1.5rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 1.25rem;
+}
+
+.results__count:empty {
+    border-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+}
+
+.results__foot {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: clamp(1.75rem, 3.2vw, 2.75rem) clamp(1.25rem, 2.4vw, 2rem);
+    align-items: start;
+}
+
+/* ---------- one book ---------- */
+
+.book {
+    display: flex;
+    flex-direction: column;
+}
+
+.book__cover {
+    display: block;
+    margin-bottom: 1rem;
+    align-self: start;
+}
+
+/*
+   Google hands back thumbnails at every aspect ratio it has on file, including
+   a few that are barely taller than a letterbox. Pinning every cover to the
+   same 2:3 box is what keeps the grid from going ragged.
+*/
+.book__cover img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: contain;
+    background: var(--paper-sunk);
+    box-shadow: var(--shadow);
+    transition: transform .28s cubic-bezier(.16, 1, .3, 1);
+}
+
+.book__cover:hover img {
+    transform: translateY(-4px);
+}
+
+/* Plenty of volumes have no cover art. Set their spine instead of a grey box. */
+.book__spine {
+    aspect-ratio: 2 / 3;
+    background: var(--paper-sunk);
+    border-left: 6px solid var(--accent);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem .875rem;
+    font-size: .8125rem;
+    line-height: 1.35;
+    color: var(--muted);
+    overflow: hidden;
+}
+
+.book__title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -.01em;
+}
+
+.book__authors {
+    font-size: .9375rem;
+    color: var(--muted);
+    margin-top: .1875rem;
+}
+
+.book__meta {
+    margin-top: .5rem;
+    font-size: .8125rem;
+    color: var(--muted);
+}
+
+.book__tag {
+    display: inline-block;
+    margin-top: .5rem;
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+/* ---------- loading, empty, error ---------- */
+
+.skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: .625rem;
+}
+
+.skeleton__cover {
+    aspect-ratio: 2 / 3;
+}
+
+.skeleton__line {
+    height: .7rem;
+}
+
+.skeleton__line--short {
+    width: 55%;
+}
+
+.skeleton__cover,
+.skeleton__line {
+    background: var(--paper-sunk);
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .45;
+    }
+}
+
+.note {
+    grid-column: 1 / -1;
+    max-width: 34rem;
+    padding: clamp(2rem, 5vw, 3.5rem) 0;
+    border-top: 1px solid var(--hairline);
+}
+
+.note__head {
+    font-size: 1.375rem;
+    font-weight: 400;
+    letter-spacing: -.02em;
+    margin-bottom: .5rem;
+}
+
+.note__body {
+    color: var(--muted);
+}
+
+.note--error .note__head {
+    color: var(--accent);
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 2rem;
+    justify-content: space-between;
+    padding: 1.5rem var(--gutter);
+    border-top: 1px solid var(--hairline);
+    font-size: .8125rem;
+    color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .book__cover img,
+    .btn {
+        transition: none;
+    }
+
+    .book__cover:hover img {
+        transform: none;
+    }
+
+    .skeleton__cover,
+    .skeleton__line {
+        animation: none;
+    }
 }

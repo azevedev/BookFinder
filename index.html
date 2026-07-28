@@ -1,24 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Finder</title>
-    <script
-        src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
+    <meta name="description" content="Search the Google Books catalogue by title, author or subject.">
+    <meta name="theme-color" content="#f1f0ec" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#16161a" media="(prefers-color-scheme: dark)">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f1f0ec'/><rect x='7' y='5' width='13' height='22' fill='%2316161a'/><rect x='20' y='5' width='5' height='22' fill='%23b5301a'/></svg>">
+    <link rel="preload" href="assets/literata-var.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
-    <h1>Book Finder</h1>
-    <div class="search">
-        Search: <input type="text" name="searchInput" id="srcIn" placeholder="Ex: How to design a good css layout" autocomplete="off">
-    </div>
-    <button id="srcBtn">Go!</button>
-    <br>
-    <div id="list" class="container">
-    </div>
-    <script src="script.js"></script>
+    <header class="topbar">
+        <span class="topbar__mark">Book Finder</span>
+        <span class="topbar__source">Google Books</span>
+    </header>
+
+    <main class="page">
+        <section class="finder">
+            <h1 class="finder__title">Find a book.</h1>
+
+            <form class="finder__form" id="form" role="search" novalidate>
+                <label class="finder__label" for="q">Title, author or subject</label>
+                <div class="finder__row">
+                    <input class="finder__input" type="search" id="q" name="q" placeholder="Brutalist architecture"
+                        autocomplete="off" autocapitalize="off" spellcheck="false" required>
+                    <button class="btn btn--primary" type="submit" id="submit">Search</button>
+                </div>
+                <p class="finder__help" id="help">Press Enter to search. Every result links out to its Google Books
+                    page.</p>
+            </form>
+        </section>
+
+        <section class="results" aria-labelledby="count">
+            <p class="results__count" id="count" role="status" aria-live="polite"></p>
+            <div class="grid" id="results"></div>
+            <div class="results__foot">
+                <button class="btn" type="button" id="more" hidden>Load 20 more</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Covers and metadata come from the Google Books API.</p>
+        <p><a href="https://github.com/azevedev/BookFinder">Source on GitHub</a></p>
+    </footer>
 </body>
+
 </html>
